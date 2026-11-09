@@ -71,12 +71,12 @@ def main():
     print(" [STEP 4] RAW UNCOMPACTED VERSION LOG BUFFER")
     print("=" * 80)
     print(f" {'Ver (t)':<8} | {'Slot Index':<12} | {'Old Value':<12} | {'New Value':<12} | {'State Action'}")
-    print(" "-" * 75")
+    print("-" * 75)
     for entry in server.version_log:
         print(f" v{entry['version']:<7} | Slot [{entry['index']:02d}]     | {entry['old_val']:<12} | {entry['new_val']:<12} | Logged to Buffer")
-    print(" "-" * 75")
+    print("-" * 75)
 
-    print("\n=" * 80)
+    print("=" * 80)
     print(" [STEP 5] EPOCH COMPACTION & NET DELTA PATCH GENERATION")
     print("=" * 80)
     print(" Server executing end_epoch_and_compact()...")
@@ -86,9 +86,9 @@ def main():
     compacted_deltas = server.end_epoch_and_compact()
 
     print(" COMPACTED PATCH TRANSMITTED TO CLIENT:")
-    print(" "-" * 80")
+    print("-" * 80)
     print(f" {'Slot Index':<12} | {'Initial Val':<14} | {'Final Val':<12} | {'Net XOR Delta (Δ)':<20}")
-    print(" "-" * 80")
+    print("-" * 80)
     
     print(f" Slot [02]     | {initial_idx_2:<14} | {server.db[2]:<12} | {compacted_deltas[2]:<20}")
     print(f" Slot [05]     | {initial_idx_5:<14} | {server.db[5]:<12} | {compacted_deltas[5]:<20}")
