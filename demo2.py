@@ -92,7 +92,7 @@ def main():
     
     print(f" Slot [02]     | {initial_idx_2:<14} | {server.db[2]:<12} | {compacted_deltas[2]:<20}")
     print(f" Slot [05]     | {initial_idx_5:<14} | {server.db[5]:<12} | {compacted_deltas[5]:<20}")
-    print(" "-" * 80")
+    print("-" * 80)
     print(f" Summary: 5 raw version updates compacted down to {len(compacted_deltas)} net deltas!\n")
 
     print("=" * 80)
