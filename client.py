@@ -41,7 +41,10 @@ class PlinkoClient:
                 break
 
         if selected_hint_id is None:
-            selected_hint_id = 0
+            raise LookupError(
+                f"No hint covers index {target_idx} (block {target_block}, offset {target_offset}). "
+                f"Increase num_hints (currently {self.num_hints}) or re-run preprocessing."
+            )
 
         hint = self.hints[selected_hint_id]
         query_indices = [idx for idx in hint['indices'] if idx != target_idx]
