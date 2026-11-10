@@ -28,7 +28,7 @@ def main():
 
     DB_SIZE = 100
     BLOCK_SIZE = 10
-    NUM_HINTS = 20
+    NUM_HINTS = 200  # enough hints that every (block, offset) is covered
 
     # 1. Initialize Server & Client
     server = PlinkoServer(DB_SIZE)
