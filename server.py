@@ -4,7 +4,6 @@ class PlinkoServer:
     """
     Server holding the raw database array.
     Implements a Versioned Update Log System and Patch Compaction
-    as specified in Sections 3 and 5.2 of the Term Paper.
     """
     def __init__(self, db_size: int, epoch_threshold: int = 100):
         self.N = db_size
