@@ -19,9 +19,9 @@ def print_db_snapshot(db_array, highlight_indices=None):
     print("      " + " | ".join(formatted_slots[5:10]))
 
 def main():
-    print("=" * 80)
-    print("   DEMO 2: DATABASE STATE MUTATIONS & EPOCH COMPACTION VISUALIZER")
-    print("=" * 80)
+    print()
+    print("*** DEMO 2: DATABASE STATE MUTATIONS & EPOCH COMPACTION VISUALIZER ***")
+    print()
 
     DB_SIZE = 100
     BLOCK_SIZE = 10
@@ -43,9 +43,7 @@ def main():
     initial_idx_2 = server.db[2]
     initial_idx_5 = server.db[5]
 
-    print("=" * 80)
-    print(" [STEP 3] EXECUTING REAL-TIME DATABASE MUTATIONS (EPOCH #1)")
-    print("=" * 80)
+    print("[STEP 3] EXECUTING REAL-TIME DATABASE MUTATIONS (EPOCH #1) ")
     print(" Scenario: Rapid updates occurring on Index 02 and Index 05...\n")
 
     # Sequence of rapid mutations
@@ -67,18 +65,15 @@ def main():
         print_db_snapshot(server.db, highlight_indices=[idx])
         print()
 
-    print("=" * 80)
-    print(" [STEP 4] RAW UNCOMPACTED VERSION LOG BUFFER")
-    print("=" * 80)
+    print("[STEP 4] RAW UNCOMPACTED VERSION LOG BUFFER")
+    print("-" * 75)
     print(f" {'Ver (t)':<8} | {'Slot Index':<12} | {'Old Value':<12} | {'New Value':<12} | {'State Action'}")
     print("-" * 75)
     for entry in server.version_log:
         print(f" v{entry['version']:<7} | Slot [{entry['index']:02d}]     | {entry['old_val']:<12} | {entry['new_val']:<12} | Logged to Buffer")
     print("-" * 75)
 
-    print("=" * 80)
-    print(" [STEP 5] EPOCH COMPACTION & NET DELTA PATCH GENERATION")
-    print("=" * 80)
+    print("\n[STEP 5] EPOCH COMPACTION & NET DELTA PATCH GENERATION")
     print(" Server executing end_epoch_and_compact()...")
     print(" Processing log: Intermediate mutations (A -> B -> C) are discarded.")
     print(" Only net change (Initial_Pre_Epoch ^ Final_Post_Epoch) is extracted.\n")
@@ -95,16 +90,12 @@ def main():
     print("-" * 80)
     print(f" Summary: 5 raw version updates compacted down to {len(compacted_deltas)} net deltas!\n")
 
-    print("=" * 80)
-    print(" [STEP 6] CLIENT APPLYING COMPACTED PATCH TO HINTS")
-    print("=" * 80)
+    print("[STEP 6] CLIENT APPLYING COMPACTED PATCH TO HINTS")
     updated_hints = client.apply_epoch_patch(compacted_deltas)
     print(f" Client applied net deltas to {updated_hints} affected hints using O(1) iPRF inversion.")
     print(" Client hints are now 100% synchronized with Server Database.\n")
 
-    print("=" * 80)
-    print(" [STEP 7] PIR QUERY VERIFICATION POST-COMPACTION")
-    print("=" * 80)
+    print("[STEP 7] PIR QUERY VERIFICATION POST-COMPACTION")
     
     # Query Index 2
     retrieved_2, _ = client.query(2, server)
@@ -115,7 +106,7 @@ def main():
     retrieved_5, _ = client.query(5, server)
     actual_5 = server.db[5]
     print(f" PIR Query for Slot [05]: Retrieved = {retrieved_5:3d} | Actual DB = {actual_5:3d} | Match = {retrieved_5 == actual_5}")
-    print("=" * 80)
+    print()
 
 if __name__ == "__main__":
     main()
