@@ -4,6 +4,7 @@ class PlinkoServer:
     """
     Server holding the raw database array.
     Implements a Versioned Update Log System and Patch Compaction
+    as specified in Sections 3 and 5.2 of the Term Paper.
     """
     def __init__(self, db_size: int, epoch_threshold: int = 100):
         self.N = db_size
@@ -32,21 +33,27 @@ class PlinkoServer:
         Logs database changes into an explicit Version Log.
         Increments current database version t -> t+1.
         Automatically triggers epoch compaction if buffer reaches epoch_threshold.
+        Uses a zero-allocation fast-path when epoch_threshold == 1.
         """
         old_val = self.db[index]
         self.current_version += 1
-        
-        # Record versioned change in log
-        log_entry = {
+        self.db[index] = new_val
+
+        # FAST-PATH: Bypass version_log and compaction dictionary overhead for single-write epochs
+        if self.epoch_threshold == 1:
+            self.epoch_counter += 1
+            delta = old_val ^ new_val
+            compacted_deltas = {index: delta} if delta != 0 else {}
+            self.historical_epoch_patches[self.epoch_counter] = compacted_deltas
+            return compacted_deltas
+
+        # Record versioned change in log for batched epochs
+        self.version_log.append({
             'version': self.current_version,
             'index': index,
             'old_val': old_val,
             'new_val': new_val
-        }
-        self.version_log.append(log_entry)
-        
-        # Apply update to server's raw database
-        self.db[index] = new_val
+        })
 
         # AUTOMATED EPOCH TRIGGER CHECK
         if len(self.version_log) >= self.epoch_threshold:
