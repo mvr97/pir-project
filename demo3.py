@@ -5,9 +5,9 @@ from client import PlinkoClient
 
 def print_log_state(title, version_log):
     """Helper function to print a clean, detailed view of the raw version_log array."""
-    print("=" * 80)
+    print()
     print(f" {title}")
-    print("=" * 80)
+    print()
     print(f" Current `server.version_log` length: {len(version_log)} entries")
     if not version_log:
         print(" [LOG STATUS]: Empty `[]` (No pending uncompacted mutations)\n")
@@ -22,9 +22,9 @@ def print_log_state(title, version_log):
 
 
 def main():
-    print("=" * 80)
-    print("   DEMO 3: DEEP-DIVE VERSION LOG CONTENT INSPECTOR")
-    print("=" * 80)
+    print()
+    print("*** DEMO 3: VERSION LOG CONTENT INSPECTOR ***")
+    print()
 
     DB_SIZE = 100
     BLOCK_SIZE = 10
@@ -43,9 +43,8 @@ def main():
     print_log_state("PHASE 1: INSPECTING LOG BEFORE ANY DATABASE MUTATIONS", server.version_log)
 
     # PHASE 2: MUTATION-BY-MUTATION LOG BUILDING
-    print("=" * 80)
-    print(" PHASE 2: EXECUTING MUTATIONS & TRACKING `version_log` GROWTH")
-    print("=" * 80)
+    print("PHASE 2: EXECUTING MUTATIONS & TRACKING `version_log` GROWTH")
+    print()
 
     mutations = [
         (10, 50,  "Write #1: Slot [10] updated to 50"),
@@ -66,9 +65,9 @@ def main():
     print_log_state("PHASE 3: RAW UNCOMPACTED `server.version_log` BUFFER AT EPOCH END", server.version_log)
 
     # PHASE 4: COMPACTION & EXTRACTION OF NET DELTAS
-    print("=" * 80)
-    print(" PHASE 4: COMPACTING `version_log` INTO NET DELTAS")
-    print("=" * 80)
+    print()
+    print("PHASE 4: COMPACTING `version_log` INTO NET DELTAS")
+    print()
     print(" Server calling `server.end_epoch_and_compact()`...")
     print(" Discarding intermediate state transitions (A -> B -> C => A -> C)...")
 
@@ -86,9 +85,9 @@ def main():
     print_log_state("PHASE 5: INSPECTING `server.version_log` AFTER COMPACTION", server.version_log)
 
     # PHASE 6: CLIENT APPLYING PATCH & VERIFYING QUERY
-    print("=" * 80)
+    print()
     print(" PHASE 6: CLIENT HINT SYNCHRONIZATION & PIR QUERY VERIFICATION")
-    print("=" * 80)
+    print()
     applied_hints = client.apply_epoch_patch(compacted_deltas)
     print(f" Client updated {applied_hints} hint parities using iPRF inversion.")
 
@@ -96,7 +95,7 @@ def main():
     retrieved, _ = client.query(target_test, server)
     actual = server.db[target_test]
     print(f" PIR Query for Slot [10]: Retrieved = {retrieved} | Actual DB = {actual} | Match = {retrieved == actual}")
-    print("=" * 80)
+    print()
 
 if __name__ == "__main__":
     main()
